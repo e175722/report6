@@ -1,4 +1,7 @@
 public class Main {
-    //渡久平のぶん
+    public static void main(String[] args){
+        BoadMake Boad = new BoadMake();
+        Boad.MakeBoad();
+    }
 }
 
