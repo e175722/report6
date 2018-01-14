@@ -35,8 +35,8 @@ public class Judge{
 
     //駒を置く時、他の駒がそこにあれば置けない表示をする
 
-    public void Judge_Piece(BoardMake board , int x1,int y1,int x2,int y2){
-        int i,j,k,l,n,m,s,t;
+    public void Judge_Piece(BoardMake board , int x1,int y1,int x2,int y2) {
+        int i, j, k, l;
         Piece temp1 = null;
         Piece temp2 = null;
         Piece[] temp3 = null;
@@ -59,221 +59,228 @@ public class Judge{
         King tempKingForSA = null;
 
 
-
-
         if (board.turn == true) {//先行の場合
 
-            for(i = 0;i < 8;i++){//動かす駒の種類を取得
-                if (board.block[x1][y1] == board.Pieces[0][i]){
-                    board.use_Piece(board.Pieces[2][i],temp3);
+            for (i = 0; i < 8; i++) {//動かす駒の種類を取得
+                if (board.block[x1][y1] == board.Pieces[0][i]) {
+                    board.use_Piece(board.Pieces[2][i], temp3);
 
-                    for (j=0;j<temp3.length;j++){//種類を把握したあと、その種類のどの駒か把握
-                        if (x1 == temp3[j].X & y1 == temp3[j].Y){
+                    for (j = 0; j < temp3.length; j++) {//種類を把握したあと、その種類のどの駒か把握
+                        if (x1 == temp3[j].X & y1 == temp3[j].Y) {
                             temp1 = temp3[j];
-                            board.casterPiece(board.Pieces[2][i],temp1,tempPawnForFA,tempBishopForFA,tempRookForFA,tempLanceForFA,tempKnightForFA,tempSilverForFA,tempGoldForFA,tempKingForFA);
+                            board.casterPiece(board.Pieces[2][i], temp1, tempPawnForFA, tempBishopForFA, tempRookForFA, tempLanceForFA, tempKnightForFA, tempSilverForFA, tempGoldForFA, tempKingForFA);
                         }
                     }
                 }
             }
-            for(k = 0;k < 8;k++){//動かそうとしてる場所に駒があるかどうか。　なければtemp2の中身はnullのまま
-                if (board.block[x2][y2] == board.Pieces[1][k]){
-                    board.use_Piece(board.Pieces[2][k],temp3);
+            for (k = 0; k < 8; k++) {//動かそうとしてる場所に駒があるかどうか。　なければtemp2の中身はnullのまま
+                if (board.block[x2][y2] == board.Pieces[1][k]) {
+                    board.use_Piece(board.Pieces[2][k], temp3);
 
-                    for (l=0;l<temp3.length;l++){//駒があったとして、どの種類の駒か把握
-                        if (x2 == temp3[l].X & y2 == temp3[l].Y){
+                    for (l = 0; l < temp3.length; l++) {//駒があったとして、どの種類の駒か把握
+                        if (x2 == temp3[l].X & y2 == temp3[l].Y) {
                             temp2 = temp3[l];
-                            board.casterPiece(board.Pieces[2][k],temp2,tempPawnForSA,tempBishopForSA,tempRookForSA,tempLanceForSA,tempKnightForSA,tempSilverForSA,tempGoldForSA,tempKingForSA);
+                            board.casterPiece(board.Pieces[2][k], temp2, tempPawnForSA, tempBishopForSA, tempRookForSA, tempLanceForSA, tempKnightForSA, tempSilverForSA, tempGoldForSA, tempKingForSA);
                         }
                     }
                 }
             }
-            if (temp2 == null){
-                if (i==0){
-                    tempPawnForFA.can_Movement(x2,y2);
+
+            if (temp1 == null) {
+                System.out.println("そこには駒はないぞ(>Д<)");
+            } else if (temp1.Player_Piece == false) {
+                System.out.println("君の駒じゃないよ(>Д<)");
+            } else if (temp2 == null) {
+                if (i == 0) {
+                    tempPawnForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "歩";
+                } else if (i == 1) {
+                    tempBishopForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "角";
+                } else if (i == 2) {
+                    tempRookForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "飛";
+                } else if (i == 3) {
+                    tempLanceForFA.can_Movemet(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "香";
+                } else if (i == 4) {
+                    tempKnightForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "桂";
+                } else if (i == 5) {
+                    tempSilverForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "銀";
+                } else if (i == 6) {
+                    tempGoldForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "金";
+                } else if (i == 7) {
+                    tempKingForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "王";
                 }
-                else if (i==1){
-                    tempBishopForFA.can_Movement(x2,y2);
-                }
-                else  if (i==2){
-                    tempRookForFA.can_Movement(x2,y2);
-                }
-                else if (i==3){
-                    tempLanceForFA.can_Movemet(x2,y2);
-                }
-                else if (i==4){
-                    tempKnightForFA.can_Movement(x2,y2);
-                }
-                else if (i==5){
-                    tempSilverForFA.can_Movement(x2,y2);
-                }
-                else if (i==6){
-                    tempGoldForFA.can_Movement(x2,y2);
-                }
-                else if (i==7){
-                    tempKingForFA.can_Movement(x2,y2);
-                }
-            }
-            else if (temp1.Player_Piece == temp2.Player_Piece){
+            } else if (temp1.Player_Piece == temp2.Player_Piece) {
                 System.out.println("味方がいるよ(>Д<)");
-            }
-            else if (temp1.Player_Piece != temp2.Player_Piece){
-                if (i==0){
-                    Rob(tempPawnForSA,board);
-                    tempPawnForFA.can_Movement(x2,y2);
-                }
-                else if (i==1){
-                    Rob(tempBishopForSA,board);
-                    tempBishopForFA.can_Movement(x2,y2);
-                }
-                else  if (i==2){
-                    Rob(tempRookForSA,board);
-                    tempRookForFA.can_Movement(x2,y2);
-                }
-                else if (i==3){
-                    Rob(tempLanceForSA,board);
-                    tempLanceForFA.can_Movemet(x2,y2);
-                }
-                else if (i==4){
-                    Rob(tempKnightForSA,board);
-                    tempKnightForFA.can_Movement(x2,y2);
-                }
-                else if (i==5){
-                    Rob(tempSilverForSA,board);
-                    tempSilverForFA.can_Movement(x2,y2);
-                }
-                else if (i==6){
-                    Rob(tempGoldForSA,board);
-                    tempGoldForFA.can_Movement(x2,y2);
-                }
-                else if (i==7){
-                    Rob(tempKingForSA,board);
-                    tempKingForFA.can_Movement(x2,y2);
+            } else if (temp1.Player_Piece != temp2.Player_Piece) {
+                if (i == 0) {
+                    Rob(tempPawnForSA, board);
+                    tempPawnForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "歩";
+                } else if (i == 1) {
+                    Rob(tempBishopForSA, board);
+                    tempBishopForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "角";
+                } else if (i == 2) {
+                    Rob(tempRookForSA, board);
+                    tempRookForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "飛";
+                } else if (i == 3) {
+                    Rob(tempLanceForSA, board);
+                    tempLanceForFA.can_Movemet(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "香";
+                } else if (i == 4) {
+                    Rob(tempKnightForSA, board);
+                    tempKnightForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "桂";
+                } else if (i == 5) {
+                    Rob(tempSilverForSA, board);
+                    tempSilverForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "銀";
+                } else if (i == 6) {
+                    Rob(tempGoldForSA, board);
+                    tempGoldForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "金";
+                } else if (i == 7) {
+                    Rob(tempKingForSA, board);
+                    tempKingForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "王";
                 }
             }
 
-        }
-        else if (board.turn == false){//後攻の場合
-            for(i = 0;i < 8;i++){//動かす駒の種類を取得
-                if (board.block[x1][y1] == board.Pieces[1][i]){
-                    board.use_Piece(board.Pieces[2][i],temp3);
+        } else if (board.turn == false) {//後攻の場合
+            for (i = 0; i < 8; i++) {//動かす駒の種類を取得
+                if (board.block[x1][y1] == board.Pieces[1][i]) {
+                    board.use_Piece(board.Pieces[2][i], temp3);
 
-                    for (j=0;j<temp3.length;j++){//種類を把握したあと、その種類のどの駒か把握
-                        if (x1 == temp3[j].X & y1 == temp3[j].Y){
+                    for (j = 0; j < temp3.length; j++) {//種類を把握したあと、その種類のどの駒か把握
+                        if (x1 == temp3[j].X & y1 == temp3[j].Y) {
                             temp1 = temp3[j];
-                            board.casterPiece(board.Pieces[2][i],temp1,tempPawnForFA,tempBishopForFA,tempRookForFA,tempLanceForFA,tempKnightForFA,tempSilverForFA,tempGoldForFA,tempKingForFA);
+                            board.casterPiece(board.Pieces[2][i], temp1, tempPawnForFA, tempBishopForFA, tempRookForFA, tempLanceForFA, tempKnightForFA, tempSilverForFA, tempGoldForFA, tempKingForFA);
                         }
                     }
                 }
             }
-            for(k = 0;k < 8;k++){//動かそうとしてる場所に駒があるかどうか。　なければtemp2の中身はnullのまま
-                if (board.block[x2][y2] == board.Pieces[0][k]){
-                    board.use_Piece(board.Pieces[2][k],temp3);
+            for (k = 0; k < 8; k++) {//動かそうとしてる場所に駒があるかどうか。　なければtemp2の中身はnullのまま
+                if (board.block[x2][y2] == board.Pieces[0][k]) {
+                    board.use_Piece(board.Pieces[2][k], temp3);
 
-                    for (l=0;l<temp3.length;l++){//駒があったとして、どの種類の駒か把握
-                        if (x2 == temp3[l].X & y2 == temp3[l].Y){
+                    for (l = 0; l < temp3.length; l++) {//駒があったとして、どの種類の駒か把握
+                        if (x2 == temp3[l].X & y2 == temp3[l].Y) {
                             temp2 = temp3[l];
-                            board.casterPiece(board.Pieces[2][k],temp2,tempPawnForSA,tempBishopForSA,tempRookForSA,tempLanceForSA,tempKnightForSA,tempSilverForSA,tempGoldForSA,tempKingForSA);
+                            board.casterPiece(board.Pieces[2][k], temp2, tempPawnForSA, tempBishopForSA, tempRookForSA, tempLanceForSA, tempKnightForSA, tempSilverForSA, tempGoldForSA, tempKingForSA);
                         }
                     }
                 }
             }
-            if (temp2 == null){//動かす場所に駒がない場合
-                if (i==0){
-                    tempPawnForFA.can_Movement(x2,y2);
-                }
-                else if (i==1){
-                    tempBishopForFA.can_Movement(x2,y2);
-                }
-                else  if (i==2){
-                    tempRookForFA.can_Movement(x2,y2);
-                }
-                else if (i==3){
-                    tempLanceForFA.can_Movemet(x2,y2);
-                }
-                else if (i==4){
-                    tempKnightForFA.can_Movement(x2,y2);
-                }
-                else if (i==5){
-                    tempSilverForFA.can_Movement(x2,y2);
-                }
-                else if (i==6){
-                    tempGoldForFA.can_Movement(x2,y2);
-                }
-                else if (i==7){
-                    tempKingForFA.can_Movement(x2,y2);
-                }
+            if (temp1 == null) {
+                System.out.println("そこには駒はないぞ(>Д<)");
+            } else if (temp1.Player_Piece == false) {
+                System.out.println("君の駒じゃないよ(>Д<)");
             }
 
-            else if (temp1.Player_Piece == temp2.Player_Piece){//動かしたい場所に駒があって、自分のだった場合
+            if (temp2 == null) {//動かす場所に駒がない場合
+                if (i == 0) {
+                    tempPawnForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "ふ";
+                } else if (i == 1) {
+                    tempBishopForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "か";
+                } else if (i == 2) {
+                    tempRookForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "ひ";
+                } else if (i == 3) {
+                    tempLanceForFA.can_Movemet(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "こ";
+                } else if (i == 4) {
+                    tempKnightForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "け";
+                } else if (i == 5) {
+                    tempSilverForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "ぎ";
+                } else if (i == 6) {
+                    tempGoldForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "き";
+                } else if (i == 7) {
+                    tempKingForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "お";
+                }
+            } else if (temp1.Player_Piece == temp2.Player_Piece) {//動かしたい場所に駒があって、自分のだった場合
                 System.out.println("味方がいるよ(>Д<)");
-            }
+            } else if (temp1.Player_Piece != temp2.Player_Piece) {//動かしたい場所に駒があって、相手のだった場合
+                if (i == 0) {
+                    Rob(tempPawnForSA, board);
+                    tempPawnForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "ふ";
+                } else if (i == 1) {
+                    Rob(tempBishopForSA, board);
+                    tempBishopForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "か";
+                } else if (i == 2) {
+                    Rob(tempRookForSA, board);
+                    tempRookForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "ひ";
+                } else if (i == 3) {
+                    Rob(tempLanceForSA, board);
+                    tempLanceForFA.can_Movemet(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "こ";
+                } else if (i == 4) {
+                    Rob(tempKnightForSA, board);
+                    tempKnightForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "け";
+                } else if (i == 5) {
+                    Rob(tempSilverForSA, board);
+                    tempSilverForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "ぎ";
+                } else if (i == 6) {
+                    Rob(tempGoldForSA, board);
+                    tempGoldForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "き";
 
-            else if (temp1.Player_Piece != temp2.Player_Piece){//動かしたい場所に駒があって、相手のだった場合
-                if (i==0){
-                    Rob(tempPawnForSA,board);
-                    tempPawnForFA.can_Movement(x2,y2);
+                } else if (i == 7) {
+                    Rob(tempKingForSA, board);
+                    tempKingForFA.can_Movement(x2, y2);
+                    board.block[x1][y1] = "　";
+                    board.block[x2][y2] = "お";
                 }
-                else if (i==1){
-                    Rob(tempBishopForSA,board);
-                    tempBishopForFA.can_Movement(x2,y2);
-                }
-                else  if (i==2){
-                    Rob(tempRookForSA,board);
-                    tempRookForFA.can_Movement(x2,y2);
-                }
-                else if (i==3){
-                    Rob(tempLanceForSA,board);
-                    tempLanceForFA.can_Movemet(x2,y2);
-                }
-                else if (i==4){
-                    Rob(tempKnightForSA,board);
-                    tempKnightForFA.can_Movement(x2,y2);
-                }
-                else if (i==5){
-                    Rob(tempSilverForSA,board);
-                    tempSilverForFA.can_Movement(x2,y2);
-                }
-                else if (i==6){
-                    Rob(tempGoldForSA,board);
-                    tempGoldForFA.can_Movement(x2,y2);
-                }
-                else if (i==7){
-                    Rob(tempKingForSA,board);
-                    tempKingForFA.can_Movement(x2,y2);
-                }
-            }
-        }
-            /*if (board.block[x1][y1] == "歩") {dddd
-
-                for (int j = 0; j <= 18; j++) {
-                    if (board.pawns[j].X == x1 & board.pawns[j].Y == y1) {
-                        temp1 = board.pawns[j];
-                    }
-                }
-
-
-                if (board.block[x2][y2] == "ふ") {
-                    for (int i = 0; i <= 17; i++) {
-                        if (board.pawns[i].X == x2 & board.pawns[i].Y == y2) {
-                            temp2 = board.pawns[i];
-                            Rob(temp1,temp2,board);
-                            }
-                        }
-                    }
-                }
-                else if (board.block[x2][y2] == "か"){
-                    for (int i = 0; i <= 1; i++) {
-                        if (board.bishops[i].X == x2 & board.bishops[i].Y == y2) {
-                            temp2 = board.bishops[i];
-                            Rob(temp1,temp2,board);
-                        }
-                }
-                else if (board.rooks[x2][y2] == "")
-
             }
         }
-        else  if (board.turn == false){
-
-        }*/
     }
 }

@@ -1,7 +1,13 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 //将棋盤を表示するクラス
 public class BoardMake {
     String[][] block; //２次元配列のblockを用意
     boolean turn; //先行が打ってる時はtrue,後攻が打ってる時はfalse
+    boolean match = true; //trueの間は試合が続く、falseになったら試合終了
+    int[] Coordinate = new int[4];
 
     //使う駒たち
     Bishop bishop1;
@@ -74,7 +80,7 @@ public class BoardMake {
         }
         for (g = 2; g < 20; g = g + 2) {
             for (j = 2, h = 1; j < 20; h = h + 2, j = j + 2) {
-                block[g][h] = " ";
+                block[g][h] = "　";
                 block[g][j] = "｜";
             }
         }
@@ -91,8 +97,8 @@ public class BoardMake {
             block[19][f] = "ー";
         }
         for (r = 0; r < 20; r++) {
-            block[0][r] = " ";
-            block[r][19] = " ";
+            block[0][r] = "　";
+            block[r][19] = "　";
         }
         for (o = 1; o < 19; o = o + 2) {
             block[0][o] = hanNum2ZenNum(block[0][o] = String.valueOf(q));
@@ -109,11 +115,10 @@ public class BoardMake {
         block[18][19] = "九";
     }
 
-    public void PrintBoard(){
+    public void PrintBoard(BoardMake board){
         int n;
-        MakeBoard();
         for(n=0;n<20;n++){
-            String[] test = block[n];
+            String[] test = board.block[n];
             String test2 = String.join("",test);
             System.out.println(test2);
         }
@@ -132,14 +137,7 @@ public class BoardMake {
     }
 
     public void Location() {
-        bishops = new Bishop[2];
-        pawns = new Pawn[18];
-        golds = new  Gold_General[4];
-        kings = new King[2];
-        knights = new Knight[4];
-        lances = new Lance[4];
-        rooks = new Rook[2];
-        silvers = new Silver_General[4];
+        int u, v, w, z;
 
         bishops[0] = bishop1 = new Bishop();
         bishops[1] = bishop2 = new Bishop();
@@ -182,13 +180,186 @@ public class BoardMake {
         silvers[2] = silver3 = new Silver_General();
         silvers[3] = silver4 = new Silver_General();
 
+        //歩の駒配置
+        for (u = 0; u < 18; u++) {
+            if (u <= 8) {
+                pawns[u].Player_Piece = true;
+                pawns[u].Movement(u + 1, 7);
+            } else {
+                pawns[u].Player_Piece = false;
+                pawns[u].Movement(u - 8, 3);
+            }
+        }
+        for (v = 0; v < 18; v++) {
+            if (pawns[v].Player_Piece == true) {
+                block[yChange(7)][xChange(v + 1)] = "歩";
+            } else if (pawns[v].Player_Piece == false) {
+                block[yChange(3)][xChange(v - 8)] = "ふ";
+            }
+        }
 
+        //王の駒配置
+        kings[0].Player_Piece = true;
+        kings[0].Movement(5, 9);
+        kings[1].Player_Piece = false;
+        kings[1].Movement(5, 1);
+        for (w = 0; w < 2; w++) {
+            if (kings[w].Player_Piece == true) {
+                block[yChange(9)][xChange(5)] = "王";
+            } else if (kings[w].Player_Piece == false) {
+                block[yChange(1)][xChange(5)] = "お";
+            }
+        }
+
+        //角の駒配置
+        bishops[0].Player_Piece = true;
+        bishops[0].Movement(8, 8);
+        bishops[1].Player_Piece = false;
+        bishops[1].Movement(2, 2);
+        for (w = 0; w < 2; w++) {
+            if (bishops[w].Player_Piece == true) {
+                block[yChange(8)][xChange(8)] = "角";
+            } else if (kings[w].Player_Piece == false) {
+                block[yChange(2)][xChange(2)] = "か";
+            }
+        }
+
+        //飛車の駒配置
+        rooks[0].Player_Piece = true;
+        rooks[0].Movement(2, 8);
+        rooks[1].Player_Piece = false;
+        rooks[1].Movement(8, 2);
+        for (w = 0; w < 2; w++) {
+            if (rooks[w].Player_Piece == true) {
+                block[yChange(8)][xChange(2)] = "飛";
+            } else if (rooks[w].Player_Piece == false) {
+                block[yChange(2)][xChange(8)] = "ひ";
+            }
+        }
+
+        //金の駒配置
+        for (u = 0; u < 4; u++) {
+            if (u <= 1) {
+                golds[u].Player_Piece = true;
+                golds[u].Movement((u * 2) + 4, 9);
+            } else {
+                golds[u].Player_Piece = false;
+                golds[u].Movement(((u - 2) * 2) + 4, 1);
+            }
+        }
+        for (v = 0; v < 4; v++) {
+            if (golds[v].Player_Piece == true) {
+                block[yChange(9)][xChange((v * 2) + 4)] = "金";
+            } else if (golds[v].Player_Piece == false) {
+                block[yChange(1)][xChange(((v - 2) * 2) + 4)] = "き";
+            }
+        }
+
+        //銀の駒配置
+        for (u = 0; u < 4; u++) {
+            if (u <= 1) {
+                silvers[u].Player_Piece = true;
+                silvers[u].Movement((u * 4) + 3, 9);
+            } else {
+                silvers[u].Player_Piece = false;
+                silvers[u].Movement(((u - 2) * 4) + 3, 1);
+            }
+        }
+        for (v = 0; v < 4; v++) {
+            if (golds[v].Player_Piece == true) {
+                block[yChange(9)][xChange((v * 4) + 3)] = "銀";
+            } else if (golds[v].Player_Piece == false) {
+                block[yChange(1)][xChange(((v - 2) * 4) + 3)] = "ぎ";
+            }
+        }
+        //桂馬の駒配置
+        for (u=0;u<4;u++){
+            if (u<=1) {
+                knights[u].Player_Piece = true;
+                knights[u].Movement((u*6)+2,9);
+            }else {
+                knights[u].Player_Piece = false;
+                knights[u].Movement(((u-2)*6)+2,1);
+            }
+        }
+        for(v=0;v<4;v++){
+            if(knights[v].Player_Piece == true) {
+                block[yChange(9)][xChange((v*6)+2)] = "桂";
+            }else if(knights[v].Player_Piece == false){
+                block[yChange(1)][xChange(((v-2)*6)+2)] = "け";
+            }
+        }
+
+        //香車の駒配置
+        for (u=0;u<4;u++){
+            if (u<=1) {
+                lances[u].Player_Piece = true;
+                lances[u].Movement((u*8)+1,9);
+            }else {
+                lances[u].Player_Piece = false;
+                lances[u].Movement(((u-2)*8)+1,1);
+            }
+        }
+        for(v=0;v<4;v++){
+            if(lances[v].Player_Piece == true) {
+                block[yChange(9)][xChange((v*8)+1)] = "香";
+            }else if(lances[v].Player_Piece == false){
+                block[yChange(1)][xChange(((v-2)*8)+1)] = "こ";
+            }
+        }
+    }
+
+
+    public static int xChange(int xx) {
+        if (xx == 1) {
+            xx = 17;
+        } else if (xx == 2) {
+            xx = 15;
+        } else if (xx == 3) {
+            xx = 13;
+        } else if (xx == 4) {
+            xx = 11;
+        } else if (xx == 5) {
+            xx = 9;
+        } else if (xx == 6) {
+            xx = 7;
+        } else if (xx == 7) {
+            xx = 5;
+        } else if (xx == 8) {
+            xx = 3;
+        } else if (xx == 9) {
+            xx = 1;
+        }
+        return xx;
+    }
+
+    public static int yChange(int yy) {
+        if (yy == 1) {
+            yy = 2;
+        } else if (yy == 2) {
+            yy = 4;
+        } else if (yy == 3) {
+            yy = 6;
+        } else if (yy == 4) {
+            yy = 8;
+        } else if (yy == 5) {
+            yy = 10;
+        } else if (yy == 6) {
+            yy = 12;
+        } else if (yy == 7) {
+            yy = 14;
+        } else if (yy == 8) {
+            yy = 16;
+        } else if (yy == 9) {
+            yy = 18;
+        }
+        return yy;
     }
 
 
     //JudgeクラスのpieceJudgeメソッドで使うためのpiece変数を作るためのメソッド
     //中身は駒の種類ごと順番よく並んでるので、順番よく取り出して使える
-    public void MakePiece(){
+    public void MakePiece() {
         //先行の人の分
         Pieces[0][0] = "歩";
         Pieces[0][1] = "角";
@@ -222,7 +393,7 @@ public class BoardMake {
     }
 
 
-    public Pawn[] getPawns(){
+    public Pawn[] getPawns() {
         return pawns;
     }
 
@@ -254,43 +425,43 @@ public class BoardMake {
         return kings;
     }
 
-    public Pawn castPawns(Piece piece){
-        return (Pawn)piece;
+    public Pawn castPawns(Piece piece) {
+        return (Pawn) piece;
     }
 
     public Bishop castBishop(Piece piece) {
-        return (Bishop)piece;
+        return (Bishop) piece;
     }
 
     public Rook castRooks(Piece piece) {
-        return (Rook)piece;
+        return (Rook) piece;
     }
 
     public Lance castLances(Piece piece) {
-        return (Lance)piece;
+        return (Lance) piece;
     }
 
     public Knight castKnights(Piece piece) {
-        return (Knight)piece;
+        return (Knight) piece;
     }
 
     public Silver_General castSilvers(Piece piece) {
-        return (Silver_General)piece;
+        return (Silver_General) piece;
     }
 
     public Gold_General castGolds(Piece piece) {
-        return (Gold_General)piece;
+        return (Gold_General) piece;
     }
 
     public King castKings(Piece piece) {
-        return (King)piece;
+        return (King) piece;
     }
 
 
     //JudgeクラスのJudge_Pieceメソッドで使う
     //指定した種類の駒を取り出すメソッド
-    public void use_Piece(String str,Piece[] pieces){
-        switch (str){
+    public void use_Piece(String str, Piece[] pieces) {
+        switch (str) {
             case "p":
                 pieces = new Pawn[18];
                 pieces = getPawns();
@@ -327,8 +498,8 @@ public class BoardMake {
 
     //Pieceからいろんな型へcastするメソッド。　JudgeクラスのJudge_Pieceメソッドで使う
     //Piece型だとそれぞれの駒の動きを表すcan_Movementメソッドが使えないので、これをつかってcastする
-    public void casterPiece(String str,Piece pieces, Pawn p,Bishop b,Rook r,Lance l,Knight kn,Silver_General s,Gold_General g, King k){
-        switch (str){
+    public void casterPiece(String str, Piece pieces, Pawn p, Bishop b, Rook r, Lance l, Knight kn, Silver_General s, Gold_General g, King k) {
+        switch (str) {
             case "p":
                 p = castPawns(pieces);
                 break;
@@ -355,11 +526,69 @@ public class BoardMake {
         }
     }
 
-    //作成中
-    public void Play(int x, int y, String piece){
 
-        System.out.println("先行の番です。動かす駒を選んでください");
+    public void PlayFirstPlayer(BoardMake Board, Judge judger) {
+        String test = null;
+        String test2 = null;
+        String[] nowCoordinate = null;
+        String[] nextCoordinate = null;
+        Board.PrintBoard(Board);
+        System.out.println("先行の番です、動かしたい駒を選んでください");
+        try {
+            BufferedReader inp = new BufferedReader(new InputStreamReader(System.in));
+            test = new String(inp.readLine());
+            System.out.println("次にどこに動かすか選んでください");
+            test2 = new String(inp.readLine());
 
+        } catch (IOException e) {
+            System.out.println("era-");
+        }
+        try {
+            nowCoordinate = test.split(" ", 0);
+            nextCoordinate = test2.split(" ", 0);
+        }
+        catch (NullPointerException e){
+            //作成中
+        }
+        Coordinate[0] = Integer.parseInt(nowCoordinate[0]);
+        Coordinate[1] = Integer.parseInt(nowCoordinate[1]);
+        Coordinate[2] = Integer.parseInt(nextCoordinate[0]);
+        Coordinate[3] = Integer.parseInt(nextCoordinate[1]);
+
+        judger.Judge_Piece(Board,xChange(Coordinate[0]),yChange(Coordinate[1]),xChange(Coordinate[2]),yChange(Coordinate[3]));
+        Board.turn = false;
+    }
+
+    public void PlaySecondPlayer(BoardMake Board, Judge judger) {
+        String test = null;
+        String test2 = null;
+        String[] nowCoordinate = null;
+        String[] nextCoordinate = null;
+        Board.PrintBoard(Board);
+        System.out.println("後攻の番です、動かしたい駒を選んでください");
+        try {
+            BufferedReader inp = new BufferedReader(new InputStreamReader(System.in));
+            test = new String(inp.readLine());
+            System.out.println("次にどこに動かすか選んでください");
+            test2 = new String(inp.readLine());
+
+        } catch (IOException e) {
+            System.out.println("era-");
+        }
+        try {
+            nowCoordinate = test.split(" ", 0);
+            nextCoordinate = test2.split(" ", 0);
+        }
+        catch (NullPointerException e){
+            //作成中
+        }
+        Coordinate[0] = Integer.parseInt(nowCoordinate[0]);
+        Coordinate[1] = Integer.parseInt(nowCoordinate[1]);
+        Coordinate[2] = Integer.parseInt(nextCoordinate[0]);
+        Coordinate[3] = Integer.parseInt(nextCoordinate[1]);
+
+        judger.Judge_Piece(Board,xChange(Coordinate[0]),yChange(Coordinate[1]),xChange(Coordinate[2]),yChange(Coordinate[3]));
+        Board.turn = true;
     }
 
 
