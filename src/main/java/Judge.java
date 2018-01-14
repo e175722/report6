@@ -243,7 +243,7 @@ public class Judge{
                 }
             }
         }
-            /*if (board.block[x1][y1] == "歩") {
+            /*if (board.block[x1][y1] == "歩") {dddd
 
                 for (int j = 0; j <= 18; j++) {
                     if (board.pawns[j].X == x1 & board.pawns[j].Y == y1) {

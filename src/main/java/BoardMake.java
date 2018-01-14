@@ -1,6 +1,3 @@
-import java.awt.event.KeyListener;
-        import java.util.Arrays;
-
 //将棋盤を表示するクラス
 public class BoardMake {
     String[][] block; //２次元配列のblockを用意
