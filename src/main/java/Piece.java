@@ -8,6 +8,7 @@ public class Piece {
     boolean Promote; //成ってるかどうか
 
     public Piece(){  //コンストラクタ
+        Promote = false;
     }
 
     public void Movement(int x,int y){//駒を動かすメソッド
@@ -15,18 +16,15 @@ public class Piece {
         Y =  y;
     }
 
-    public void Piece_Promote_gold(int x,int y){//成り 金と同じ動き
-        if(x == X & (y == Y+1|y == Y-1)){
-            Movement(x,y);
+    public BoardMake boardUpdate(BoardMake board,int x1,int y1,int x2,int y2,int number){
+        if (board.turn == true){
+            board.block[y1][x1] = "　";
+            board.block[y2][x2] = board.Pieces[0][number];
         }
-        else if(x == X+1 & (y == Y|y == Y+1)){
-            Movement(x,y);
+        else if (board.turn == false){
+            board.block[y1][x1] = "　";
+            board.block[y2][x2] = board.Pieces[1][number];
         }
-        else if(x == X-1 & y == Y|y == Y+1){
-            Movement(x,y);
-        }
-        else{
-            System.out.println("そこには動かせないよ(>Д<)");
-        }
+        return board;
     }
 }

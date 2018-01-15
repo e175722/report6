@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 //将棋盤を表示するクラス
 public class BoardMake {
@@ -54,7 +55,7 @@ public class BoardMake {
     //駒のまとまり
     Bishop[] bishops = new Bishop[2];
     Pawn[] pawns = new Pawn[18];
-    Gold_General[] golds = new  Gold_General[4];
+    Gold_General[] golds = new Gold_General[4];
     King[] kings = new King[2];
     Knight[] knights = new Knight[4];
     Lance[] lances = new Lance[4];
@@ -63,7 +64,6 @@ public class BoardMake {
 
     //JudgeクラスのpieceJudgeメソッドで使う変数
     String[][] Pieces = new String[3][8];
-
 
 
     //将棋盤の基盤となるものを２次元配列で表示するメソッド
@@ -115,11 +115,11 @@ public class BoardMake {
         block[18][19] = "九";
     }
 
-    public void PrintBoard(BoardMake board){
+    public void PrintBoard(BoardMake board) {
         int n;
-        for(n=0;n<20;n++){
+        for (n = 0; n < 20; n++) {
             String[] test = board.block[n];
-            String test2 = String.join("",test);
+            String test2 = String.join("", test);
             System.out.println(test2);
         }
     }
@@ -130,7 +130,7 @@ public class BoardMake {
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (c >= '0' && c <= '9') {
-                sb.setCharAt(i, (char)(c - '0' + '０'));
+                sb.setCharAt(i, (char) (c - '0' + '０'));
             }
         }
         return sb.toString();
@@ -184,10 +184,10 @@ public class BoardMake {
         for (u = 0; u < 18; u++) {
             if (u <= 8) {
                 pawns[u].Player_Piece = true;
-                pawns[u].Movement(u + 1, 7);
+                pawns[u].Movement(xChange(u + 1), yChange(7));
             } else {
                 pawns[u].Player_Piece = false;
-                pawns[u].Movement(u - 8, 3);
+                pawns[u].Movement(xChange(u - 8), yChange(3));
             }
         }
         for (v = 0; v < 18; v++) {
@@ -200,9 +200,9 @@ public class BoardMake {
 
         //王の駒配置
         kings[0].Player_Piece = true;
-        kings[0].Movement(5, 9);
+        kings[0].Movement(xChange(5), yChange(9));
         kings[1].Player_Piece = false;
-        kings[1].Movement(5, 1);
+        kings[1].Movement(xChange(5), yChange(1));
         for (w = 0; w < 2; w++) {
             if (kings[w].Player_Piece == true) {
                 block[yChange(9)][xChange(5)] = "王";
@@ -213,9 +213,9 @@ public class BoardMake {
 
         //角の駒配置
         bishops[0].Player_Piece = true;
-        bishops[0].Movement(8, 8);
+        bishops[0].Movement(xChange(8), yChange(8));
         bishops[1].Player_Piece = false;
-        bishops[1].Movement(2, 2);
+        bishops[1].Movement(xChange(2), yChange(2));
         for (w = 0; w < 2; w++) {
             if (bishops[w].Player_Piece == true) {
                 block[yChange(8)][xChange(8)] = "角";
@@ -226,9 +226,9 @@ public class BoardMake {
 
         //飛車の駒配置
         rooks[0].Player_Piece = true;
-        rooks[0].Movement(2, 8);
+        rooks[0].Movement(xChange(2), yChange(8));
         rooks[1].Player_Piece = false;
-        rooks[1].Movement(8, 2);
+        rooks[1].Movement(xChange(8), yChange(2));
         for (w = 0; w < 2; w++) {
             if (rooks[w].Player_Piece == true) {
                 block[yChange(8)][xChange(2)] = "飛";
@@ -241,10 +241,10 @@ public class BoardMake {
         for (u = 0; u < 4; u++) {
             if (u <= 1) {
                 golds[u].Player_Piece = true;
-                golds[u].Movement((u * 2) + 4, 9);
+                golds[u].Movement(xChange((u * 2) + 4), yChange(9));
             } else {
                 golds[u].Player_Piece = false;
-                golds[u].Movement(((u - 2) * 2) + 4, 1);
+                golds[u].Movement(xChange(((u - 2) * 2) + 4), yChange(1));
             }
         }
         for (v = 0; v < 4; v++) {
@@ -259,10 +259,10 @@ public class BoardMake {
         for (u = 0; u < 4; u++) {
             if (u <= 1) {
                 silvers[u].Player_Piece = true;
-                silvers[u].Movement((u * 4) + 3, 9);
+                silvers[u].Movement(xChange((u * 4) + 3), yChange(9));
             } else {
                 silvers[u].Player_Piece = false;
-                silvers[u].Movement(((u - 2) * 4) + 3, 1);
+                silvers[u].Movement(xChange(((u - 2) * 4) + 3), yChange(1));
             }
         }
         for (v = 0; v < 4; v++) {
@@ -273,44 +273,44 @@ public class BoardMake {
             }
         }
         //桂馬の駒配置
-        for (u=0;u<4;u++){
-            if (u<=1) {
+        for (u = 0; u < 4; u++) {
+            if (u <= 1) {
                 knights[u].Player_Piece = true;
-                knights[u].Movement((u*6)+2,9);
-            }else {
+                knights[u].Movement(xChange((u * 6) + 2), yChange(9));
+            } else {
                 knights[u].Player_Piece = false;
-                knights[u].Movement(((u-2)*6)+2,1);
+                knights[u].Movement(xChange(((u - 2) * 6) + 2), yChange(1));
             }
         }
-        for(v=0;v<4;v++){
-            if(knights[v].Player_Piece == true) {
-                block[yChange(9)][xChange((v*6)+2)] = "桂";
-            }else if(knights[v].Player_Piece == false){
-                block[yChange(1)][xChange(((v-2)*6)+2)] = "け";
+        for (v = 0; v < 4; v++) {
+            if (knights[v].Player_Piece == true) {
+                block[yChange(9)][xChange((v * 6) + 2)] = "桂";
+            } else if (knights[v].Player_Piece == false) {
+                block[yChange(1)][xChange(((v - 2) * 6) + 2)] = "け";
             }
         }
 
         //香車の駒配置
-        for (u=0;u<4;u++){
-            if (u<=1) {
+        for (u = 0; u < 4; u++) {
+            if (u <= 1) {
                 lances[u].Player_Piece = true;
-                lances[u].Movement((u*8)+1,9);
-            }else {
+                lances[u].Movement(xChange((u * 8) + 1), yChange(9));
+            } else {
                 lances[u].Player_Piece = false;
-                lances[u].Movement(((u-2)*8)+1,1);
+                lances[u].Movement(xChange(((u - 2) * 8) + 1), yChange(1));
             }
         }
-        for(v=0;v<4;v++){
-            if(lances[v].Player_Piece == true) {
-                block[yChange(9)][xChange((v*8)+1)] = "香";
-            }else if(lances[v].Player_Piece == false){
-                block[yChange(1)][xChange(((v-2)*8)+1)] = "こ";
+        for (v = 0; v < 4; v++) {
+            if (lances[v].Player_Piece == true) {
+                block[yChange(9)][xChange((v * 8) + 1)] = "香";
+            } else if (lances[v].Player_Piece == false) {
+                block[yChange(1)][xChange(((v - 2) * 8) + 1)] = "こ";
             }
         }
     }
 
 
-    public static int xChange(int xx) {
+    public int xChange(int xx) {
         if (xx == 1) {
             xx = 17;
         } else if (xx == 2) {
@@ -333,7 +333,7 @@ public class BoardMake {
         return xx;
     }
 
-    public static int yChange(int yy) {
+    public int yChange(int yy) {
         if (yy == 1) {
             yy = 2;
         } else if (yy == 2) {
@@ -460,40 +460,34 @@ public class BoardMake {
 
     //JudgeクラスのJudge_Pieceメソッドで使う
     //指定した種類の駒を取り出すメソッド
-    public void use_Piece(String str, Piece[] pieces) {
+    public Piece[] use_Piece(String str) {
+        Piece[] piece = null;
         switch (str) {
             case "p":
-                pieces = new Pawn[18];
-                pieces = getPawns();
+                piece = pawns;
                 break;
-            case "b:":
-                pieces = new Bishop[2];
-                pieces = getBishop();
+            case "b":
+                piece = bishops;
                 break;
             case "r":
-                pieces = new Rook[2];
-                pieces = getRooks();
+                piece = rooks;
                 break;
             case "l":
-                pieces = new Lance[4];
-                pieces = getLances();
+                piece = lances;
                 break;
             case "kn":
-                pieces = new Knight[4];
-                pieces = getKnights();
+                piece = knights;
                 break;
             case "s":
-                pieces = new Silver_General[4];
-                pieces = getSilvers();
+                piece = silvers;
                 break;
             case "g":
-                pieces = new Gold_General[4];
-                pieces = getGolds();
+                piece = golds;
                 break;
             case "k":
-                pieces = new King[2];
-                pieces = getKings();
+                piece = kings;
         }
+        return piece;
     }
 
     //Pieceからいろんな型へcastするメソッド。　JudgeクラスのJudge_Pieceメソッドで使う
@@ -525,71 +519,4 @@ public class BoardMake {
                 k = castKings(pieces);
         }
     }
-
-
-    public void PlayFirstPlayer(BoardMake Board, Judge judger) {
-        String test = null;
-        String test2 = null;
-        String[] nowCoordinate = null;
-        String[] nextCoordinate = null;
-        Board.PrintBoard(Board);
-        System.out.println("先行の番です、動かしたい駒を選んでください");
-        try {
-            BufferedReader inp = new BufferedReader(new InputStreamReader(System.in));
-            test = new String(inp.readLine());
-            System.out.println("次にどこに動かすか選んでください");
-            test2 = new String(inp.readLine());
-
-        } catch (IOException e) {
-            System.out.println("era-");
-        }
-        try {
-            nowCoordinate = test.split(" ", 0);
-            nextCoordinate = test2.split(" ", 0);
-        }
-        catch (NullPointerException e){
-            //作成中
-        }
-        Coordinate[0] = Integer.parseInt(nowCoordinate[0]);
-        Coordinate[1] = Integer.parseInt(nowCoordinate[1]);
-        Coordinate[2] = Integer.parseInt(nextCoordinate[0]);
-        Coordinate[3] = Integer.parseInt(nextCoordinate[1]);
-
-        judger.Judge_Piece(Board,xChange(Coordinate[0]),yChange(Coordinate[1]),xChange(Coordinate[2]),yChange(Coordinate[3]));
-        Board.turn = false;
-    }
-
-    public void PlaySecondPlayer(BoardMake Board, Judge judger) {
-        String test = null;
-        String test2 = null;
-        String[] nowCoordinate = null;
-        String[] nextCoordinate = null;
-        Board.PrintBoard(Board);
-        System.out.println("後攻の番です、動かしたい駒を選んでください");
-        try {
-            BufferedReader inp = new BufferedReader(new InputStreamReader(System.in));
-            test = new String(inp.readLine());
-            System.out.println("次にどこに動かすか選んでください");
-            test2 = new String(inp.readLine());
-
-        } catch (IOException e) {
-            System.out.println("era-");
-        }
-        try {
-            nowCoordinate = test.split(" ", 0);
-            nextCoordinate = test2.split(" ", 0);
-        }
-        catch (NullPointerException e){
-            //作成中
-        }
-        Coordinate[0] = Integer.parseInt(nowCoordinate[0]);
-        Coordinate[1] = Integer.parseInt(nowCoordinate[1]);
-        Coordinate[2] = Integer.parseInt(nextCoordinate[0]);
-        Coordinate[3] = Integer.parseInt(nextCoordinate[1]);
-
-        judger.Judge_Piece(Board,xChange(Coordinate[0]),yChange(Coordinate[1]),xChange(Coordinate[2]),yChange(Coordinate[3]));
-        Board.turn = true;
-    }
-
-
 }
